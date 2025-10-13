@@ -43,7 +43,7 @@ class ComposerController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $composer = Composer::create($request->validated());
+        $composer = Composer::create($validator->validated());
 
         return response()->json([
             'message' => 'Composer created successfully',

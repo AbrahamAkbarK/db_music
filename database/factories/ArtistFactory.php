@@ -37,8 +37,8 @@ class ArtistFactory extends Factory
             'facebook_url' => 'https://www.facebook.com/' . $this->faker->userName(),
             'twitter_url' => 'https://www.twitter.com/' . $this->faker->userName(),
             'status' => $this->faker->randomElement(['active', 'inactive', 'on_hold']),
-            'contract_start_date' => $this->faker->dateTimeBetween('-5 years', 'now'),
-            'contract_end_date' => $this->faker->dateTimeBetween('now', '+5 years'),
+            'contract_start_date' => $this->faker->dateTimeBetween('-10 years', '-5 years'),
+            'contract_end_date' => $this->faker->dateTimeBetween('-3 years', '+1 years'),
         ];
     }
 }

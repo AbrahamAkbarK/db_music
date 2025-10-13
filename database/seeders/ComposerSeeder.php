@@ -65,7 +65,7 @@ class ComposerSeeder extends Seeder
                 'death_date' => null,
                 'bio' => 'American composer, conductor, and pianist, known for film scores.',
                 'image_url' => 'https://example.com/williams.jpg',
-                'email' => 'contact@johnwilliams.com', 
+                'email' => 'contact@johnwilliams.com',
                 'phone' => '+1-310-555-0123',
                 'address' => 'Beverly Hills, CA 90210, USA',
             ],

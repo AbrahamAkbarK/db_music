@@ -43,8 +43,8 @@ class SongController extends Controller
         }
 
         // Sort options
-        $sortBy = $request->get('sort_by', 'track_number');
-        $sortOrder = $request->get('sort_order', 'asc');
+        $sortBy = $request->get('sort_by', 'id');
+        $sortOrder = $request->get('sort_order', 'desc');
         $query->orderBy($sortBy, $sortOrder);
 
         $songs = $query->paginate($request->per_page ?? 10);
@@ -62,8 +62,8 @@ class SongController extends Controller
             'album_id' => 'required|exists:albums,id',
             'artist_id' => 'required|exists:artists,id',
             'composer_id' => 'required|exists:composers,id',
-            'track_number' => 'required|integer|min:1',
-            'duration_seconds' => 'required|integer|min:1',
+            'track_number' => 'nullable|integer|min:1',
+            'duration_seconds' => 'nullable|integer|min:1',
             'genre' => 'nullable|string|max:255',
             'lyrics' => 'nullable|string',
             'isrc_code' => 'nullable|string|unique:songs,isrc_code',
@@ -80,21 +80,21 @@ class SongController extends Controller
         ]);
 
         // Check if track number already exists for this album
-        $existingTrack = Song::where('album_id', $validated['album_id'])
-                            ->where('track_number', $validated['track_number'])
-                            ->first();
+        // $existingTrack = Song::where('album_id', $validated['album_id'])
+        //                     ->where('track_number', $validated['track_number'])
+        //                     ->first();
 
-        if ($existingTrack) {
-            return response()->json([
-                'message' => 'Track number already exists for this album'
-            ], 422);
-        }
+        // if ($existingTrack) {
+        //     return response()->json([
+        //         'message' => 'Track number already exists for this album'
+        //     ], 422);
+        // }
 
         $validated['slug'] = Str::slug($validated['title']);
         $song = Song::create($validated);
 
         // Update album total duration and track count
-        $song->album->updateTotalDuration();
+        // $song->album->updateTotalDuration();
 
         return response()->json([
             'message' => 'Song created successfully',
@@ -111,7 +111,7 @@ class SongController extends Controller
 
         // Eager load the 'composer' and 'artist' relationships.
         // This attaches the related models to the song object efficiently.
-        $song->load(['composer', 'artist', 'album']);
+        $song->load(['composer', 'artist', 'album', 'link', 'contracts']);
 
         return response()->json($song);
     }
@@ -123,6 +123,7 @@ class SongController extends Controller
     {
         $validated = $request->validate([
             'title' => 'string|max:255',
+            'slug'  => 'required|alpha_dash|unique:songs,slug,' . $song->id,
             'track_number' => 'integer|min:1',
             'duration_seconds' => 'integer|min:1',
             'genre' => 'nullable|string|max:255',
@@ -235,4 +236,34 @@ class SongController extends Controller
             'message' => 'Total songs retrieved successfully',
         ]);
     }
+
+    public function search(Request $request): JsonResponse
+    {
+        $query = $request->input('q');
+        if (!$query) {
+            return response()->json([]);
+        }
+        $songs = Song::where('title', 'LIKE', "%{$query}%")
+                     ->limit(10)
+                     ->get();
+        return response()->json($songs);
+    }
+
+    public function expiredContracts(): JsonResponse
+    {
+        // Use whereHas to filter Songs based on a condition on their 'contracts' relationship.
+        $songs = Song::whereHas('contracts', function ($query) {
+            // Inside the closure, we can use our pre-existing, clean query scope!
+            $query->expired();
+        })
+        ->with(['contracts' => function ($query) {
+            // Also eager-load only the expired contracts so the frontend knows which ones to show.
+            $query->expired();
+        }])
+        ->latest()
+        ->paginate(5);
+
+        return response()->json($songs);
+    }
+
 }

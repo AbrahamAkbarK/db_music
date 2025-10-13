@@ -9,6 +9,9 @@ use App\Models\Album;
 use App\Models\Genre;
 use App\Models\Artist;
 use App\Models\Composer;
+use App\Models\Contract;
+use App\Models\Link;
+use App\Models\Member;
 use Illuminate\Database\Seeder;
 use Database\Seeders\SongSeeder;
 use Database\Seeders\AlbumSeeder;
@@ -32,11 +35,15 @@ class DatabaseSeeder extends Seeder
             AlbumSeeder::class,
             ComposerSeeder::class,
         ]);
-        Song::factory(100)->recycle([
+        Song::factory(100)
+        ->has(Link::factory())
+        ->has(Contract::factory()->count(2))
+        ->recycle([
             Album::all(),
             Artist::all(),
             Genre::all(),
-            Composer::all()
+            Composer::all(),
+            Member::all()
         ])->create();
     }
 }

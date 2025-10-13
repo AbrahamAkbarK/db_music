@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('biography')->nullable();
             $table->string('genre')->nullable();
             $table->string('country')->nullable();
-            $table->date('birth_date')->nullable();
+            $table->date('birth_date')->nullable()->format('Y-m-d');
             $table->string('email')->unique()->nullable();
             $table->string('phone')->nullable();
             $table->string('category')->nullable();

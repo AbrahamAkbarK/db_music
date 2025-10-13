@@ -47,7 +47,7 @@ class AlbumController extends Controller
         $sortOrder = $request->get('sort_order', 'desc');
         $query->orderBy($sortBy, $sortOrder);
 
-        $albums = $query->paginate($request->per_page ?? 15);
+        $albums = $query->paginate($request->per_page ?? 10);
 
         return response()->json($albums);
     }

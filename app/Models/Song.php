@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
@@ -42,7 +43,7 @@ class Song extends Model
     ];
 
     // Relationships
-    public function album(): BelongsTo
+    public function album()
     {
         return $this->belongsTo(Album::class);
     }
@@ -62,10 +63,21 @@ class Song extends Model
 
     public function artist()
     {
-        return $this->belongsTo(Artist::class,'artist_id');
+        return $this->belongsTo(Artist::class);
         // ->withPivot('role')
         // ->withTimestamps();
     }
+
+    public function link()
+    {
+        return $this->hasOne(Link::class);
+    }
+
+    public function contracts(): MorphMany
+    {
+        return $this->morphMany(Contract::class, 'contractable');
+    }
+
 
     public function playlists(): BelongsToMany
     {
@@ -74,15 +86,15 @@ class Song extends Model
             ->withTimestamps();
     }
 
-    public function sales(): MorphMany
-    {
-        return $this->morphMany(Sale::class, 'sellable');
-    }
+    // public function sales(): MorphMany
+    // {
+    //     return $this->morphMany(Sale::class, 'sellable');
+    // }
 
-    public function streamingStats(): MorphMany
-    {
-        return $this->morphMany(StreamingStat::class, 'streamable');
-    }
+    // public function streamingStats(): MorphMany
+    // {
+    //     return $this->morphMany(StreamingStat::class, 'streamable');
+    // }
 
     // Helper methods
     public function getDurationFormatted()

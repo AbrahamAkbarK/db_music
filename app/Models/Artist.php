@@ -47,9 +47,14 @@ class Artist extends Model
         return $this->hasManyThrough(Composer::class, Song::class);
     }
 
-    public function contracts(): HasMany
+    public function members(): HasMany
     {
-        return $this->hasMany(Contract::class);
+        return $this->hasMany(Member::class);
+    }
+
+    public function contracts(): MorphMany
+    {
+        return $this->morphMany(Contract::class, 'contractable');
     }
 
     public function sales(): MorphMany

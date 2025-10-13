@@ -2,36 +2,45 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Psy\CodeCleaner\ReturnTypePass;
 
 class Contract extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'artist_id', 'contract_type', 'start_date', 'end_date', 'terms',
-        'advance_amount', 'royalty_percentage', 'minimum_albums', 'status',
-        'contract_file_path'
+        'contract_number',
+        'contract_type',
+        'amount',
+        'status',
+        'start_date',
+        'end_date',
     ];
 
     protected $casts = [
+        'amount' => 'decimal:2',
         'start_date' => 'date',
         'end_date' => 'date',
-        'advance_amount' => 'decimal:2',
-        'royalty_percentage' => 'decimal:2',
     ];
 
-    public function artist(): BelongsTo
+    /**
+     * Get the parent contractable model (e.g., a Song).
+     */
+    public function contractable(): MorphTo
     {
-        return $this->belongsTo(Artist::class);
+        return $this->morphTo();
     }
 
-    public function isActive()
+
+    public function scopeExpired(Builder $query): Builder
     {
-        return $this->status === 'active' &&
-               $this->start_date <= now() &&
-               ($this->end_date === null || $this->end_date >= now());
+        return $query->where('status', 'active')
+                     ->whereNotNull('end_date')
+                     ->where('end_date', '<', now());
     }
 }

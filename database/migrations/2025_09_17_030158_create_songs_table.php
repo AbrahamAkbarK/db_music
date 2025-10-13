@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug')->unique();
-            $table->foreignId('album_id')->constrained()->onDelete('cascade');
+            $table->foreignId('album_id')->constrained()->onDelete('set null');
             $table->foreignId('artist_id')->constrained()->onDelete('cascade');
             $table->foreignId('composer_id')->constrained('composers')->default(1)->onDelete('cascade');
-            $table->integer('track_number');
-            $table->integer('duration_seconds'); // Duration in seconds
+            $table->integer('track_number')->nullable();
+            $table->integer('duration_seconds')->nullable(); // Duration in seconds
             $table->string('genre')->nullable();
             $table->text('lyrics')->nullable();
             $table->string('isrc_code')->unique()->nullable(); // International Standard Recording Code
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('lyricist')->nullable();
             $table->string('arranger')->nullable();
             $table->string('royalty_contract')->nullable();
-            $table->string('label')->nullable();
+            $table->string('label')->default('PT Aquarius Musikindo');
             $table->boolean('is_explicit')->default(false);
             $table->timestamps();
 

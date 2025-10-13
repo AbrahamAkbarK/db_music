@@ -88,6 +88,7 @@ class ArtistController extends Controller
         // }]);
         // Add computed counts
         // $artist->append(['songs_count']);
+        $artist->load(['albums', 'songs', 'members']);
         return response()->json([
             'message' => 'Artist retrieved successfully',
             'artist' => $artist,
@@ -198,4 +199,41 @@ class ArtistController extends Controller
             ->get();
         return response()->json($artistCounts);
     }
+
+    public function getUpcomingBirthdays(Request $request, int $days = 90)
+    {
+        $today = now();
+        $endDate = now()->addDays($days);
+
+        $artists = Artist::query()
+            ->where(function ($query) use ($today, $endDate) {
+                $todayFormatted = $today->format('m-d');
+                $endDateFormatted = $endDate->format('m-d');
+
+                // Ganti DATE_FORMAT menjadi strftime
+                $dateFormatRaw = "strftime('%m-%d', birth_date)";
+
+                if ($today->year === $endDate->year) {
+                    $query->whereRaw("$dateFormatRaw BETWEEN ? AND ?", [$todayFormatted, $endDateFormatted]);
+                } else {
+                    $query->where(function ($query) use ($todayFormatted, $endDateFormatted, $dateFormatRaw) {
+                        $query->whereRaw("$dateFormatRaw >= ?", [$todayFormatted])
+                              ->orWhereRaw("$dateFormatRaw <= ?", [$endDateFormatted]);
+                    });
+                }
+            })
+            // Ganti juga di sini untuk sorting
+            ->orderByRaw("CASE
+                WHEN strftime('%m-%d', birth_date) >= ? THEN 1
+                ELSE 2
+            END", [$today->format('m-d')])
+            // Dan di sini
+            ->orderByRaw("strftime('%m-%d', birth_date) ASC")
+            ->get();
+
+        return response()->json($artists);
+    }
+
+
+
 }
