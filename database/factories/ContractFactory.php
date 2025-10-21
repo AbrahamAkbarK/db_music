@@ -19,8 +19,8 @@ class ContractFactory extends Factory
     public function definition(): array
     {
         $startDate = fake()->dateTimeBetween('-1 year', 'now');
-        $contractTypes = ['License', 'Publishing', 'Work for Hire', 'Distribution'];
-        $statuses = ['draft', 'active', 'expired', 'terminated'];
+        $contractTypes = ['Flat', 'Royalty Base'];
+        $statuses = ['draft', 'active', 'expired'];
 
         return [
             'contract_number' => fake()->unique()->bothify('CTR-####-????'),
@@ -29,7 +29,7 @@ class ContractFactory extends Factory
             'status' => fake()->randomElement($statuses),
             'start_date' => $startDate,
             // 75% chance of having an end date, 25% chance of being null
-            'end_date' => fake()->optional(0.75)->dateTimeBetween($startDate, '+3 years'),
+            'end_date' => fake()->dateTimeBetween($startDate, '+3 years'),
         ];
     }
 

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('email')->unique()->nullable();
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
+            $table->string('gender', 10)->nullable(); // e.g., '
             $table->text('bio')->nullable();  // Short biography
             $table->string('image_url')->nullable();  // Optional profile image
             $table->timestamps();  // created_at, updated_at

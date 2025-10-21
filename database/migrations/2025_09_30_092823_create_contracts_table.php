@@ -24,7 +24,6 @@ return new class extends Migration
             $table->string('status'); // e.g., 'draft', 'active', 'expired'
             $table->date('start_date');
             $table->date('end_date')->nullable();
-
             $table->timestamps();
         });
     }

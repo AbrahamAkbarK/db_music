@@ -34,6 +34,7 @@ return new class extends Migration
             $table->enum('status', ['active', 'inactive', 'on_hold'])->default('active');
             $table->date('contract_start_date')->nullable();
             $table->date('contract_end_date')->nullable();
+
             $table->timestamps();
         });
     }

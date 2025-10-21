@@ -38,7 +38,7 @@ class SongFactory extends Factory
             'lyricist' => $this->faker->name(),
             'arranger' => $this->faker->name(),
             'is_explicit' => $this->faker->boolean(20), // 20% chance of being explicit
-            'royalty_contract'=> $this->faker->randomElement(['FLAT','ROYALTY BASED']),
+            'royalty_contract'=> $this->faker->randomElement(['Flat','Royalty Based']),
             'label'=> $this->faker->randomElement(['PT Aquarius Musikindo']),
             'artist_id' => Artist::factory(),
             'composer_id'=> Composer::factory(),

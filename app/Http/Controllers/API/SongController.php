@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Song;
+use App\Models\Contract;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -15,7 +16,7 @@ class SongController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $query = Song::with(['album', 'artist','composer']);
+        $query = Song::with(['album', 'artist', 'composer']);
 
         // Filter by album
         if ($request->has('album_id')) {
@@ -105,7 +106,7 @@ class SongController extends Controller
     /**
      * Display the specified resource.
      */
-   public function show(Song $song): JsonResponse
+    public function show(Song $song): JsonResponse
     {
         // Laravel has already found the song via route model binding.
 
@@ -144,9 +145,9 @@ class SongController extends Controller
         // Check track number uniqueness for the album if being updated
         if (isset($validated['track_number'])) {
             $existingTrack = Song::where('album_id', $song->album_id)
-                                ->where('track_number', $validated['track_number'])
-                                ->where('id', '!=', $song->id)
-                                ->first();
+                ->where('track_number', $validated['track_number'])
+                ->where('id', '!=', $song->id)
+                ->first();
 
             if ($existingTrack) {
                 return response()->json([
@@ -244,26 +245,28 @@ class SongController extends Controller
             return response()->json([]);
         }
         $songs = Song::where('title', 'LIKE', "%{$query}%")
-                     ->limit(10)
-                     ->get();
+            ->limit(10)
+            ->get();
         return response()->json($songs);
     }
 
-    public function expiredContracts(): JsonResponse
+    public function expiredContracts(Request $request): JsonResponse
     {
-        // Use whereHas to filter Songs based on a condition on their 'contracts' relationship.
-        $songs = Song::whereHas('contracts', function ($query) {
-            // Inside the closure, we can use our pre-existing, clean query scope!
-            $query->expired();
-        })
-        ->with(['contracts' => function ($query) {
-            // Also eager-load only the expired contracts so the frontend knows which ones to show.
-            $query->expired();
-        }])
-        ->latest()
-        ->paginate(5);
+        $query = Song::query();
+
+        $query->when($request->input('status'), function ($q, $status) {
+            // "Hanya ambil lagu-lagu YANG MEMILIKI ('whereHas') relasi 'contracts'
+            // DI MANA ('where') kolom 'status' pada salah satu kontrak tersebut
+            // sama dengan nilai yang diberikan"
+            return $q->whereHas('contracts', function ($subQuery) use ($status) {
+                $subQuery->where('status', $status);
+            });
+        });
+
+        $songs = $query->with(['contracts', 'artist', 'composer'])
+            ->latest()
+            ->paginate(5);
 
         return response()->json($songs);
     }
-
 }

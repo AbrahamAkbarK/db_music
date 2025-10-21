@@ -35,6 +35,7 @@ class ComposerController extends Controller
             'email' => 'nullable|email|unique:composers,email',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
+            'gender' => 'nullable|string|max:10',
             'bio' => 'nullable|string',
             'image_url' => 'nullable|url',
         ]);
@@ -88,6 +89,7 @@ class ComposerController extends Controller
             'email' => 'nullable|email|unique:composers,email',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
+            'gender' => 'nullable|string|max:10',
             'bio' => 'nullable|string',
             'image_url' => 'nullable|url',
         ]);

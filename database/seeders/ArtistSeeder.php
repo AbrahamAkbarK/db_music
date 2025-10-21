@@ -17,7 +17,7 @@ class ArtistSeeder extends Seeder
     {
         Artist::factory(20)
         ->has(Member::factory()->count(rand(3,5)))
-        ->has(Contract::factory()->count(2))
+        ->has(Contract::factory()->count(1))
         ->create();
     }
 }

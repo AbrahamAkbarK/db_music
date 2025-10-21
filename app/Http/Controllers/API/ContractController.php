@@ -24,7 +24,7 @@ class ContractController extends Controller
      */
     public function index(Request $request):JsonResponse
     {
-        // Start with a base query and eager-load the parent relationship for efficiency.
+        // Start with a base query and eager-load the parent relationship
         $query = Contract::query()->with('contractable');
 
         // Filter by contract status (e.g., 'active', 'draft', 'expired')
@@ -52,6 +52,33 @@ class ContractController extends Controller
         $contracts = $query->latest()->paginate(20)->withQueryString();
 
         return response()->json($contracts);
+    }
+
+    public function store(Request $request, Song $song)
+    {
+        // 1. Validasi Input
+        // Ini adalah langkah keamanan yang sangat penting.
+        $validatedData = $request->validate([
+            'contract_number' => 'required|string|max:255',
+            'status' => ['required', Rule::in(['draft', 'active', 'expired',])],
+            'contract_type' => [ 'required', 'string', 'max:255'],
+            'amount' => ['required', 'numeric', 'min:0'],
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ]);
+
+        // 2. Buat Kontrak Menggunakan Relasi
+        // Ini adalah cara paling elegan di Laravel.
+        // Eloquent akan secara otomatis mengisi 'contractable_id' dan 'contractable_type'
+        // dengan data dari objek $song.
+        $contract = $song->contracts()->create($validatedData);
+
+        // 3. Kembalikan Respons Sukses
+        // Mengembalikan data yang baru dibuat adalah praktik terbaik.
+        return response()->json([
+            'message' => 'Successfully created contract',
+            'data' => $contract
+        ], 201); // 201 Created adalah status HTTP yang tepat
     }
 
 
@@ -84,7 +111,7 @@ class ContractController extends Controller
             ],
             'contract_type' => ['sometimes', 'required', 'string', 'max:255'],
             'amount' => ['sometimes', 'required', 'numeric', 'min:0'],
-            'status' => ['sometimes', 'required', 'string', Rule::in(['draft', 'active', 'expired', 'terminated'])],
+            'status' => ['sometimes', 'required', 'string', Rule::in(['draft', 'active', 'expired'])],
             'start_date' => ['sometimes', 'required', 'date'],
             'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
         ]);

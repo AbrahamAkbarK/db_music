@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('royalty_contract')->nullable();
             $table->string('label')->default('PT Aquarius Musikindo');
             $table->boolean('is_explicit')->default(false);
+
             $table->timestamps();
 
             $table->unique(['album_id','artist_id', 'track_number','composer_id']);

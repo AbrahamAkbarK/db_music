@@ -35,7 +35,7 @@ class ArtistController extends Controller
             });
         }
 
-        $artists = $query->paginate($request->per_page ?? 10);
+        $artists = $query->latest()->paginate($request->per_page ?? 10);
 
         return response()->json($artists);
     }

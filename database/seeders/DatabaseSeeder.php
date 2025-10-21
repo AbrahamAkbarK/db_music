@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
         ]);
         Song::factory(100)
         ->has(Link::factory())
-        ->has(Contract::factory()->count(2))
+        ->has(Contract::factory()->count(1))
         ->recycle([
             Album::all(),
             Artist::all(),

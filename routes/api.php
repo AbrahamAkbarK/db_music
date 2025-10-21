@@ -58,10 +58,12 @@ Route::get('/total-songs', [SongController::class, 'getTotalSongs']);
 Route::get('songs/{song}/artists', [SongController::class, 'artists']);
 Route::post('songs/{song}/artists', [SongController::class, 'attachArtist']);
 Route::get('songs/{song}/streaming-stats', [SongController::class, 'streamingStats']);
-Route::get('/songs/expired', [SongController::class, 'expiredContracts']);
+Route::get('/songexp', [SongController::class, 'expiredContracts']);
+Route::get('/contracts/{contract}/songs', [SongController::class, 'getSongsByContract']);
 
 Route::get('/contracts',[ContractController::class, 'index']);
 Route::get('/contracts/{contract}', [ContractController::class, 'show']);
+Route::post('/songs/{song}/contracts', [ContractController::class, 'store']);
 
 // Routes to list and add contracts for a specific artist
 Route::get('/artists/{artist}/contracts', [ArtistContractController::class, 'index']);

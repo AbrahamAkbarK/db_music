@@ -19,6 +19,7 @@ class Composer extends Model
         'email',
         'phone',
         'address',
+        'gender',
         'bio',
         'image_url',
     ];

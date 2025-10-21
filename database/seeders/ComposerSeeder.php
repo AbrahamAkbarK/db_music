@@ -24,6 +24,7 @@ class ComposerSeeder extends Seeder
                 'email' => null,
                 'phone' => null,
                 'address' => null,
+                'gender' => 'Male',
             ],
             [
                 'name' => 'Wolfgang Amadeus Mozart',
@@ -35,6 +36,7 @@ class ComposerSeeder extends Seeder
                 'email' => null,
                 'phone' => null,
                 'address' => null,
+                'gender' => 'Male',
             ],
             [
                 'name' => 'Johann Sebastian Bach',
@@ -46,6 +48,7 @@ class ComposerSeeder extends Seeder
                 'email' => null,
                 'phone' => null,
                 'address' => null,
+                'gender' => 'Male',
             ],
             [
                 'name' => 'Hans Zimmer',
@@ -57,6 +60,7 @@ class ComposerSeeder extends Seeder
                 'email' => 'info@hanszimmer.com',
                 'phone' => '+49-89-123456',
                 'address' => 'Remote Studios, Los Angeles, CA 90028, USA',
+                'gender' => 'Male',
             ],
             [
                 'name' => 'John Williams',
@@ -68,6 +72,7 @@ class ComposerSeeder extends Seeder
                 'email' => 'contact@johnwilliams.com',
                 'phone' => '+1-310-555-0123',
                 'address' => 'Beverly Hills, CA 90210, USA',
+                'gender' => 'Male',
             ],
         ];
         foreach ($composers as $composerData) {
