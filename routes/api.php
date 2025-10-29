@@ -3,15 +3,18 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Api\LinkController;
+use App\Http\Controllers\Api\NoteController;
 use App\Http\Controllers\API\SongController;
 use App\Http\Controllers\API\AlbumController;
 use App\Http\Controllers\API\ArtistController;
 use App\Http\Controllers\Api\ComposerController;
+use App\Http\Controllers\Api\ContractController;
 use App\Http\Controllers\API\PlaylistController;
+use App\Http\Controllers\Api\AttachmentController;
 use App\Http\Controllers\Api\ArtistMemberController;
 use App\Http\Controllers\Api\SongContractController;
 use App\Http\Controllers\Api\ArtistContractController;
-use App\Http\Controllers\Api\ContractController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -61,9 +64,25 @@ Route::get('songs/{song}/streaming-stats', [SongController::class, 'streamingSta
 Route::get('/songexp', [SongController::class, 'expiredContracts']);
 Route::get('/contracts/{contract}/songs', [SongController::class, 'getSongsByContract']);
 
+Route::post('/songs/{song}/links', [LinkController::class, 'storeOrUpdate']);
+
 Route::get('/contracts',[ContractController::class, 'index']);
 Route::get('/contracts/{contract}', [ContractController::class, 'show']);
 Route::post('/songs/{song}/contracts', [ContractController::class, 'store']);
+
+Route::post('/songs/{song}/notes', [NoteController::class, 'store']);
+Route::post('/songs/{song}/attachments', [AttachmentController::class, 'store']);
+
+// Endpoint untuk menambah note ke Artist
+Route::post('/artists/{artist}/notes', [NoteController::class, 'storeForArtist']);
+// Endpoint untuk menambah attachment ke Artist
+Route::post('/artists/{artist}/attachments', [AttachmentController::class, 'storeForArtist']);
+
+// Endpoint untuk menambah note ke Composer
+Route::post('/composers/{composer}/notes', [NoteController::class, 'storeForComposer']);
+// Endpoint untuk menambah attachment ke Composer
+Route::post('/composers/{composer}/attachments', [AttachmentController::class, 'storeForComposer']);
+
 
 // Routes to list and add contracts for a specific artist
 Route::get('/artists/{artist}/contracts', [ArtistContractController::class, 'index']);

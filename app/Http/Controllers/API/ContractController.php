@@ -89,7 +89,7 @@ class ContractController extends Controller
      */
     public function show(Contract $contract):JsonResponse
     {
-        $contract->load('contractable');
+        $contract->load('contractable.link');
 
         return response()->json($contract);
     }

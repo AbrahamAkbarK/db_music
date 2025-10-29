@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('links', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('song_id')->constrained()->onDelete('cascade');
+            $table->foreignId('song_id')->unique()->constrained()->onDelete('cascade');
             $table->string('spotify_url')->nullable();
             $table->string('apple_music_url')->nullable();
             $table->string('youtube_url')->nullable();

@@ -78,6 +78,15 @@ class Song extends Model
         return $this->morphMany(Contract::class, 'contractable');
     }
 
+    public function notes()
+    {
+        return $this->morphMany(Note::class, 'noteable');
+    }
+
+    public function attachments()
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
+    }
 
     public function playlists(): BelongsToMany
     {

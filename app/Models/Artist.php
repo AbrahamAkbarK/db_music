@@ -57,6 +57,16 @@ class Artist extends Model
         return $this->morphMany(Contract::class, 'contractable');
     }
 
+    public function notes()
+    {
+        return $this->morphMany(Note::class, 'noteable');
+    }
+
+    public function attachments()
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
+    }
+
     public function sales(): MorphMany
     {
         return $this->morphMany(Sale::class, 'sellable');

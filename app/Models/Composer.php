@@ -62,4 +62,14 @@ class Composer extends Model
     {
         return $this->songs()->count();
     }
+
+    public function notes()
+    {
+        return $this->morphMany(Note::class, 'noteable');
+    }
+
+    public function attachments()
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
+    }
 }

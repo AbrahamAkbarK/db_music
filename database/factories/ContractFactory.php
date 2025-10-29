@@ -18,9 +18,9 @@ class ContractFactory extends Factory
      */
     public function definition(): array
     {
-        $startDate = fake()->dateTimeBetween('-1 year', 'now');
+        $startDate = fake()->dateTimeBetween('-3 year', 'now');
         $contractTypes = ['Flat', 'Royalty Base'];
-        $statuses = ['draft', 'active', 'expired'];
+        $statuses = ['Draft', 'Active', 'Expired'];
 
         return [
             'contract_number' => fake()->unique()->bothify('CTR-####-????'),
