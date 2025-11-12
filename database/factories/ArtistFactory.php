@@ -28,7 +28,7 @@ class ArtistFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'phone' => $this->faker->phoneNumber(),
             'website' => $this->faker->url(),
-            'category' => $this->faker->randomElement(['solo', 'Group Band']),
+            'category' => $this->faker->randomElement(['Solo', 'Group Band']),
             'manager' => $this->faker->name(),
             'spotify_url' => 'https://open.spotify.com/artist/' . $this->faker->uuid(),
             'apple_music_url' => 'https://music.apple.com/artist/' . $this->faker->uuid(),

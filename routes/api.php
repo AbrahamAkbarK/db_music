@@ -15,14 +15,17 @@ use App\Http\Controllers\Api\AttachmentController;
 use App\Http\Controllers\Api\ArtistMemberController;
 use App\Http\Controllers\Api\SongContractController;
 use App\Http\Controllers\Api\ArtistContractController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
+    return $request->user();});
 
-Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logout']);
-Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
+Route::post('/register', [RegisteredUserController::class, 'store'])
+            ->middleware('guest')
+            ->name('register');
+
+// Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logout']);
+// Route::post('login', [AuthController::class, 'login']);
 
 Route::apiResource('composers', ComposerController::class);
 Route::get('/composers', [ComposerController::class, 'index']);

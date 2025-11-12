@@ -18,7 +18,7 @@ class ContractFactory extends Factory
      */
     public function definition(): array
     {
-        $startDate = fake()->dateTimeBetween('-3 year', 'now');
+        $startDate = fake()->dateTimeBetween('-3 year', '-1year');
         $contractTypes = ['Flat', 'Royalty Base'];
         $statuses = ['Draft', 'Active', 'Expired'];
 
@@ -29,7 +29,7 @@ class ContractFactory extends Factory
             'status' => fake()->randomElement($statuses),
             'start_date' => $startDate,
             // 75% chance of having an end date, 25% chance of being null
-            'end_date' => fake()->dateTimeBetween($startDate, '+3 years'),
+            'end_date' => fake()->dateTimeBetween($startDate, '+2 years'),
         ];
     }
 
