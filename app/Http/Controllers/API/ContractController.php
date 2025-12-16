@@ -56,8 +56,6 @@ class ContractController extends Controller
 
     public function store(Request $request, Song $song)
     {
-        // 1. Validasi Input
-        // Ini adalah langkah keamanan yang sangat penting.
         $validatedData = $request->validate([
             'contract_number' => 'required|string|max:255',
             'status' => ['required', Rule::in(['draft', 'active', 'expired',])],
@@ -67,18 +65,12 @@ class ContractController extends Controller
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
 
-        // 2. Buat Kontrak Menggunakan Relasi
-        // Ini adalah cara paling elegan di Laravel.
-        // Eloquent akan secara otomatis mengisi 'contractable_id' dan 'contractable_type'
-        // dengan data dari objek $song.
         $contract = $song->contracts()->create($validatedData);
 
-        // 3. Kembalikan Respons Sukses
-        // Mengembalikan data yang baru dibuat adalah praktik terbaik.
         return response()->json([
             'message' => 'Successfully created contract',
             'data' => $contract
-        ], 201); // 201 Created adalah status HTTP yang tepat
+        ], 201);
     }
 
 
